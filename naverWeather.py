@@ -10,7 +10,7 @@ class naverWeather():
     addr = "https://weather.naver.com/today/"
     map_cityNum = {}
 
-
+    # csv에 저장된 지역번호를 Dictionary에 매핑.
     with open('cityNumber.csv', mode='r', encoding="utf-8") as inp:
         reader = csv.reader(inp)
         map_cityNum = {rows[0]:rows[1].replace('"','').strip() for rows in reader}
