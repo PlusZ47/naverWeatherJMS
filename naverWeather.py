@@ -39,12 +39,14 @@ class naverWeather():
         soup = BeautifulSoup(req.text, "html.parser")
         location = soup.find(class_='location_name')
         table = soup.find(class_="week_list")
+        currentWeather = soup.find(class_='weather')
         t_ary = list(table.stripped_strings)
 
         self.result = ("[" + self.area + "(" + location.text +")"+" 날씨 검색 결과]\n"
                     + "- 오늘(" + t_ary[1] +")\n"
                     + " \t 오전 - " + t_ary[11][:-1] + "℃ (" + t_ary[5] + ", 강수확률 : " + t_ary[4] + ")\n"
                     + " \t 오후 - " + t_ary[14][:-1] + "℃ (" + t_ary[9] + ", 강수확률 : " + t_ary[8] + ")\n"
+                    + " \t 현재 날씨상태 - " + currentWeather.text + "\n" + self.needUmbrella(currentWeather.text)
                     + "- 내일(" + t_ary[16] + ")\n"
                     + " \t 오전 - " + t_ary[26][:-1] + "℃ (" + t_ary[20] + ", 강수확률 : " + t_ary[19] + ")\n"
                     + " \t 오후 - " + t_ary[29][:-1] + "℃ (" + t_ary[24] + ", 강수확률 : " + t_ary[23] + ")\n")
@@ -74,7 +76,13 @@ class naverWeather():
             fits = self.temp_wearingFits[7]
         
         return fits
-    
+        
+    def needUmbrella(self, currentWeather):
+        if currentWeather == '비':
+            return "\n\t *오늘같은 날은 우산을 챙기는건 어때요?\n\n"
+        else:
+            return "\n\t *우산이 필요없을거 같아요!\n\n"
+
     def getWeather(self):
         if not self.result:
             # 도시명을 잘못 입력한 경우 결과가 나오지 않는다.
