@@ -58,21 +58,21 @@ class naverWeather():
         fits = list()
         avr = (int(t_ary[11][:-1]) + int(t_ary[14][:-1])) / 2
 
-        if (avr >= 28):
+        if (avr >= 28.0):
             fits = self.temp_wearingFits[0]
-        elif (avr >= 23 and avr <= 27):
+        elif (avr >= 27.0):
             fits = self.temp_wearingFits[1]
-        elif (avr >= 20 and avr <= 22):
+        elif (avr >= 20.0):
             fits = self.temp_wearingFits[2]
-        elif (avr >= 17 and avr <= 19):
+        elif (avr >= 17.0):
             fits = self.temp_wearingFits[3]
-        elif (avr >= 12 and avr <= 16):
+        elif (avr >= 12.0):
             fits = self.temp_wearingFits[4]
-        elif (avr >= 9 and avr <= 11):
+        elif (avr >= 9.0):
             fits = self.temp_wearingFits[5]
-        elif (avr >= 5 and avr <= 8):
+        elif (avr >= 5.0):
             fits = self.temp_wearingFits[6]
-        else:
+        elif (avr <= 4.0):
             fits = self.temp_wearingFits[7]
         
         return fits
