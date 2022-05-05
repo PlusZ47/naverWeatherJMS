@@ -8,6 +8,7 @@ class naverWeather():
     # 예전 url 주소
     # addr = "http://weather.naver.com/rgn/cityWetrCity.nhn?cityRgnCd=CT"
     addr = "https://weather.naver.com/today/"
+    addrAir = "https://weather.naver.com/air/"
     map_cityNum = {}
     temp_wearingFits = list()
 
@@ -23,11 +24,13 @@ class naverWeather():
     def __init__(self, area):
         self.area = area
         self.addr = None
+        self.addrAir = None
         self.result = None
         self.fits = list()
 
         cityNum = naverWeather.map_cityNum[area]
         self.addr = naverWeather.addr + cityNum
+        self.addrAir = naverWeather.addrAir + cityNum
         
         self.search()
 
@@ -36,16 +39,22 @@ class naverWeather():
         naverWeather.session.encoding = 'utf-8'
 
         req = naverWeather.session.get(self.addr)
+        reqAir = naverWeather.session.get(self.addrAir)
         soup = BeautifulSoup(req.text, "html.parser")
+        soupAir = BeautifulSoup(reqAir.text, "html.parser")
         location = soup.find(class_='location_name')
         table = soup.find(class_="week_list")
         currentWeather = soup.find(class_='weather')
+        air = soupAir.find(class_='top_area')
         t_ary = list(table.stripped_strings)
+        t_aryAir = list(air.stripped_strings)
 
         self.result = ("[" + self.area + "(" + location.text +")"+" 날씨 검색 결과]\n"
                     + "- 오늘(" + t_ary[1] +")\n"
                     + " \t 오전 - " + t_ary[11][:-1] + "℃ (" + t_ary[5] + ", 강수확률 : " + t_ary[4] + ")\n"
                     + " \t 오후 - " + t_ary[14][:-1] + "℃ (" + t_ary[9] + ", 강수확률 : " + t_ary[8] + ")\n"
+                    + " \t 미세먼지 - " + t_aryAir[15] + "㎍/㎥ (" + t_aryAir[16] + ")\n"
+                    + " \t 초미세먼지 - " + t_aryAir[32] + "㎍/㎥ (" + t_aryAir[33] + ")\n"
                     + " \t 현재 날씨상태 - " + currentWeather.text + "\n" + self.needUmbrella(currentWeather.text)
                     + "- 내일(" + t_ary[16] + ")\n"
                     + " \t 오전 - " + t_ary[26][:-1] + "℃ (" + t_ary[20] + ", 강수확률 : " + t_ary[19] + ")\n"
